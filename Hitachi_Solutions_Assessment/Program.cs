@@ -61,7 +61,7 @@ namespace Hitachi_Solutions_Assessment
             mail.Attachments.Add(attachment);
 
             SmtpServer.Port = 587;
-            SmtpServer.Credentials = new System.Net.NetworkCredential("eg.phpmails@gmail.com", "killmyself!1");
+            SmtpServer.Credentials = new System.Net.NetworkCredential(email, password);
             SmtpServer.EnableSsl = true;
 
             SmtpServer.Send(mail);
