@@ -33,18 +33,47 @@ namespace Hitachi_Solutions_Assessment
                 allRecords = records.ToList();
             }
 
-            foreach (Person p in allRecords)
+            // this is IEnumerable
+            var newList = allRecords.GroupBy(r => r.country)
+                     .Select(s => new { Country = s.Key, 
+                         Avg = s.Average(p => p.score), 
+                         Max = s.Max(p => p.score), 
+                         Min = s.Min(p => p.score),
+                         Count = s.Count()})
+                     .OrderBy(s=>s.Avg);
+
+            List<Record> results = new List<Record>();
+
+            Person maxPerson;
+            Person minPerson;
+            double median;
+
+            foreach (var p in newList)
             {
-                Console.WriteLine(p.country);
+                maxPerson = allRecords.Find(r => r.score == p.Max);
+                minPerson = allRecords.Find(r => r.score == p.Min);
+                median = allRecords.FindAll(r => r.country == p.Country)
+                    .OrderByDescending(r => r.score)
+                    .ElementAt(p.Count % 2 == 0 ? p.Count/2 : (p.Count-1)/2).score;
+       
+
+                results.Add(new Record(p.Country, p.Avg, median, p.Max, maxPerson.firstName + " " + maxPerson.lastName, 
+                    p.Min, minPerson.firstName + " " + minPerson.lastName, p.Count));
             }
 
-            using (var writer = new StreamWriter("ReportByCountry.csv"))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            foreach (Record r in results)
             {
-                csv.WriteRecords(allRecords);
+                Console.WriteLine(r.averageScore + " " + r.country + " " + r.recordCount + " " + r.maxScore + " " + r.maxScorePerson + " "
+                    + r.minScore + " " + r.minScorePerson + " " + r.medianScore);
             }
-            Program program = new Program();
-           // program.email_send();
+
+            //using (var writer = new StreamWriter("ReportByCountry.csv"))
+            //using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            //{
+            //    csv.WriteRecords(allRecords);
+            //}
+            //Program program = new Program();
+            // program.email_send();
         }
 
         //public void email_send()
