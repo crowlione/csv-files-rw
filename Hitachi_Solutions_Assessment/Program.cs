@@ -38,34 +38,34 @@ namespace Hitachi_Solutions_Assessment
                 Console.WriteLine(p.country);
             }
 
-            using (var writer = new StreamWriter(@"C:\Users\Katy\Desktop\test.txt"))
+            using (var writer = new StreamWriter("ReportByCountry.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(allRecords);
             }
             Program program = new Program();
-            program.email_send();
+           // program.email_send();
         }
 
-        public void email_send()
-        {
-            MailMessage mail = new MailMessage();
-            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            mail.From = new MailAddress("eg.phpmails@gmail.com");
-            mail.To.Add("kyashicrow@gmail.com");
-            mail.Subject = "Test Mail - 1";
-            mail.Body = "mail with attachment";
+        //public void email_send()
+        //{
+        //    MailMessage mail = new MailMessage();
+        //    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+        //    mail.From = new MailAddress("eg.phpmails@gmail.com");
+        //    mail.To.Add("kyashicrow@gmail.com");
+        //    mail.Subject = "Test Mail - 1";
+        //    mail.Body = "mail with attachment";
 
-            System.Net.Mail.Attachment attachment;
-            attachment = new System.Net.Mail.Attachment(@"C:\Users\Katy\Desktop\test.txt");
-            mail.Attachments.Add(attachment);
+        //    System.Net.Mail.Attachment attachment;
+        //    attachment = new System.Net.Mail.Attachment(@"test.csv");
+        //    mail.Attachments.Add(attachment);
 
-            SmtpServer.Port = 587;
-            SmtpServer.Credentials = new System.Net.NetworkCredential(email, password);
-            SmtpServer.EnableSsl = true;
+        //    SmtpServer.Port = 587;
+        //    SmtpServer.Credentials = new System.Net.NetworkCredential(email, password);
+        //    SmtpServer.EnableSsl = true;
 
-            SmtpServer.Send(mail);
+        //    SmtpServer.Send(mail);
 
-        }
+        //}
     }
 }
