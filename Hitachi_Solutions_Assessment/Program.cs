@@ -1,12 +1,13 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.VisualBasic.FileIO;
+using MailKit.Security;
+using MailKit.Net.Smtp;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 
 namespace Hitachi_Solutions_Assessment
@@ -25,7 +26,7 @@ namespace Hitachi_Solutions_Assessment
             do
             {
                 Console.WriteLine("Please select a language. Type in either EN or DE.\n" +
-                   "Bitte wählen Sie eine Sprache. Geben Sie entweder EN oder DE ein.\n");
+                   "Bitte wählen Sie eine Sprache. Geben Sie entweder EN oder DE ein.");
                 Globals.LANGUAGE = Console.ReadLine().ToUpper();
             }
             while (Globals.LANGUAGE != "DE" && Globals.LANGUAGE != "EN");
@@ -41,8 +42,7 @@ namespace Hitachi_Solutions_Assessment
 
             List<Person> allRecords = new List<Person>();
 
-
-            var config = new CsvConfiguration(CultureInfo.CurrentCulture) { Delimiter = ";"};
+            var config = new CsvConfiguration(CultureInfo.CurrentCulture) { Delimiter = ";", DetectDelimiter = true};
             try
             {
                 using (var reader = new StreamReader(fileName)) 
@@ -53,8 +53,6 @@ namespace Hitachi_Solutions_Assessment
                     allRecords = records.ToList();
                 }
            
-
-                // this is IEnumerable
                 if(allRecords.Count() == 0)
                 {
                     Console.WriteLine(Globals.EMPTY_WARNING);
@@ -109,9 +107,13 @@ namespace Hitachi_Solutions_Assessment
                     {
                         program.email_send(senderEmailAddress, password, receiverEmailAddress);
                     }
-                     catch (FormatException)
+                     catch (MailKit.Security.AuthenticationException)
                     {
                         Console.WriteLine(Globals.FORMAT_ERROR);
+                    }
+                    catch (MailKit.Net.Smtp.SmtpCommandException)
+                    {
+                        Console.WriteLine(Globals.WRONG_RECEIVER);
                     }
                 }
             }
@@ -119,36 +121,44 @@ namespace Hitachi_Solutions_Assessment
             {
                 Console.WriteLine(Globals.FILE_NOT_FOUND);
             }
+            catch (CsvHelper.MissingFieldException)
+            {
+                Console.WriteLine(Globals.INCOMPLETE_DATA);
+            }
+            catch (CsvHelper.HeaderValidationException)
+            {
+                Console.WriteLine(Globals.INCOMPLETE_DATA);
+            }
         }
 
         public void email_send(String senderEmail, String senderPassword, String receiverEmail)
         {
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse(senderEmail));
+            email.To.Add(MailboxAddress.Parse(receiverEmail));
+            email.Subject = Globals.EMAIL_TITLE;
+
+            var builder = new BodyBuilder();
+            builder.TextBody = Globals.GREETING + receiverEmail.Split('@')[0] + Globals.EMAIL_BODY;
+            builder.Attachments.Add("ReportByCountry.csv");
+            email.Body = builder.ToMessageBody();
             
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress(senderEmail);
-                mail.To.Add(receiverEmail);
-                mail.Subject = Globals.EMAIL_TITLE;
-                mail.Body = Globals.GREETING + senderEmail + Globals.EMAIL_BODY;
-
-                System.Net.Mail.Attachment attachment;
-                attachment = new System.Net.Mail.Attachment("ReportByCountry.csv");
-                mail.Attachments.Add(attachment);
-
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential(senderEmail, senderPassword);
-                SmtpServer.EnableSsl = true;
-
-               try
-               {
-                   SmtpServer.Send(mail);
-               }
-               catch (SmtpException)
-               {
-                   Console.WriteLine(Globals.UNAUTHORIZED_ERROR);
-               }
-         
-
+            using var smtp = new MailKit.Net.Smtp.SmtpClient();
+            if (senderEmail.Contains("@abv.bg")){
+                smtp.Connect("smtp.abv.bg", 465, true);
+            }
+            else if (senderEmail.Contains("@mail.bg"))
+            {
+                smtp.Connect("smtp.mail.bg", 465, true);
+            }
+            else
+            {
+                smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            }
+            smtp.Authenticate(senderEmail, senderPassword);
+            smtp.Send(email);
+            Console.WriteLine(Globals.SUCCESS);
+            smtp.Disconnect(true);            
         }
     }
 }
