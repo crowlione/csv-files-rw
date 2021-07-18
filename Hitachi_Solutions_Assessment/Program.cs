@@ -134,6 +134,10 @@ namespace Hitachi_Solutions_Assessment
             {
                 Console.WriteLine(Globals.INCOMPLETE_DATA);
             }
+            catch (CsvHelper.TypeConversion.TypeConverterException)
+            {
+                Console.WriteLine(Globals.MISMATCHED_DATA);
+            }
         }
 
         public void email_send(String senderEmail, String senderPassword, String receiverEmail)

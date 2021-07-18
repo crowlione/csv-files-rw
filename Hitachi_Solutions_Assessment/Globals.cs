@@ -21,6 +21,7 @@ namespace Hitachi_Solutions_Assessment
         public static String SUCCESS = "File sent successfully!";
         public static String WRONG_RECEIVER = "Incorrect receiver email!";
         public static String INCOMPLETE_DATA = "Incomplete data! Please make sure the headers are properly named.";
+        public static String MISMATCHED_DATA = "Mismatched data types in columns! The data can not be processed.";
 
         public static void changeLanguage()
         {
@@ -38,6 +39,7 @@ namespace Hitachi_Solutions_Assessment
             SUCCESS = "Datei erfolgreich gesendet!";
             WRONG_RECEIVER = "Falsche Empfänger E-Mail Adresse!";
             INCOMPLETE_DATA = "Unvollständige Daten! Bitte stellen Sie sicher, dass die Headerzeilen richtig benannt sind.";
+            MISMATCHED_DATA = "Nicht übereinstimmende Datentypen in den Spalten gefunden! Die Daten können nicht verarbeitet werden.";
         }
     }
 }
