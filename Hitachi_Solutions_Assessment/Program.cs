@@ -28,6 +28,7 @@ namespace Hitachi_Solutions_Assessment
                 Console.WriteLine("Please select a language. Type in either EN or DE.\n" +
                    "Bitte wählen Sie eine Sprache. Geben Sie entweder EN oder DE ein.");
                 Globals.LANGUAGE = Console.ReadLine().ToUpper();
+                Console.WriteLine();
             }
             while (Globals.LANGUAGE != "DE" && Globals.LANGUAGE != "EN");
 
@@ -39,6 +40,7 @@ namespace Hitachi_Solutions_Assessment
             Console.WriteLine(Globals.FILE_NAME);
             
             fileName = Console.ReadLine();
+            Console.WriteLine();
 
             List<Person> allRecords = new List<Person>();
 
@@ -95,12 +97,15 @@ namespace Hitachi_Solutions_Assessment
 
                     Console.WriteLine(Globals.EMAIL);
                     senderEmailAddress = Console.ReadLine();
+                    Console.WriteLine();
 
                     Console.WriteLine(Globals.PASSWORD);
                     password = Console.ReadLine();
+                    Console.WriteLine();
 
                     Console.WriteLine(Globals.RECEIVER_EMAIL);
                     receiverEmailAddress = Console.ReadLine();
+                    Console.WriteLine();
 
                     Program program = new Program();
                     try

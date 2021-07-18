@@ -17,11 +17,5 @@ namespace Hitachi_Solutions_Assessment
         public String city { get; set; }
         [Index(4)]
         public int score { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString() + ": " + firstName.ToString();
-            ;
-        }
     }
 }

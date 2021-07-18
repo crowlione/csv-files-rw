@@ -24,15 +24,6 @@ namespace Hitachi_Solutions_Assessment
         [Name("Record count")]
         public int recordCount { get; set; }
 
-        public Record(string country, double averageScore, double maxScore, double minScore, int recordCount)
-        {
-            this.country = country;
-            this.averageScore = averageScore;
-            this.maxScore = maxScore;
-            this.minScore = minScore;
-            this.recordCount = recordCount;
-        }
-
         public Record(string country, double averageScore, double medianScore, double maxScore, string maxScorePerson, double minScore, string minScorePerson, int recordCount)
         {
             this.country = country;
