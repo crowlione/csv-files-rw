@@ -7,15 +7,15 @@ namespace Hitachi_Solutions_Assessment
 {
    public class Person
     {
-        [Name("First Name")]
+        [Index(0)]
         public String firstName { get; set; }
-        [Name("Last Name")]
+        [Index(1)]
         public String lastName { get; set; }
-        [Name("Country")]
+        [Index(2)]
         public String country { get; set; }
-        [Name("City")]
+        [Index(3)]
         public String city { get; set; }
-        [Name("Score")]
+        [Index(4)]
         public int score { get; set; }
 
         public override string ToString()
